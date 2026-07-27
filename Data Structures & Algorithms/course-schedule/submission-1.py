@@ -1,0 +1,38 @@
+class Solution:
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        
+        indegree = [0] * numCourses
+        adj = {i : [] for i in range(numCourses)}
+
+        for course, prereq in prerequisites:
+
+            indegree[prereq] += 1
+            adj[course].append(prereq)
+        
+
+        queue = deque()
+        
+        for i in range(numCourses):
+
+            if indegree[i] == 0:
+                queue.append(i)
+        
+        completed = 0
+        order = []
+
+        while queue:
+
+            course = queue.popleft()
+            completed += 1
+            order.append(course)
+
+            for dependant in adj[course]:
+
+                indegree[dependant] -= 1
+
+                if indegree[dependant] == 0:
+
+                    queue.append(dependant)
+
+        print(order)
+        return completed == numCourses
